@@ -16,7 +16,7 @@ interface Props {
 export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Props) {
   const [phase, setPhase] = useState<'intro' | 'playing' | 'result'>('intro');
   const [score, setScore] = useState(0);
-  const [round, _setRound] = useState(0);
+  const [round, setRound] = useState(0);
   const [combo, setCombo] = useState(0);
   const totalRounds = challengeType === 'logic' ? 5 : challengeType === 'strategy' ? 1 : 4;
 
@@ -35,6 +35,7 @@ export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Pr
         onResult(true, msg);
       }, 1200);
     } else {
+      setTimeout(() => { setRound((r: number) => r + 1); }, 1200);
     }
   }, [round, combo, totalRounds, onResult]);
 
@@ -47,6 +48,7 @@ export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Pr
         onResult(finalScore > 100, msg);
       }, 1200);
     } else {
+      setTimeout(() => { setRound((r: number) => r + 1); }, 1200);
     }
   }, [round, score, totalRounds, onResult]);
 
