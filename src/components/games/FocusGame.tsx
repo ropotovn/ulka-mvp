@@ -38,7 +38,6 @@ export function FocusGame({ onComplete, onBack }: FocusGameProps) {
   const spawnStimulus = useCallback(() => {
     const isTarget = Math.random() < 0.55; // 55% targets
     const shapes: Stimulus['shape'][] = ['sphere', 'cube', 'torus'];
-    const colors: Stimulus['color'][] = ['green', 'red', 'blue'];
 
     const s: Stimulus = {
       id: Date.now(),

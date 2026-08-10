@@ -1,7 +1,7 @@
 import { useApp } from '../store';
 
 export function Header() {
-  const { view, setView, interest, childName } = useApp();
+  const { view, setView, childName } = useApp();
 
   return (
     <header className="flex justify-between items-center px-6 py-4 max-w-5xl mx-auto">

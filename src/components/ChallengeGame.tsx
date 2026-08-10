@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ChallengeType } from '../campaign';
 import { SceneIllustration } from './SceneIllustration';
@@ -7,7 +7,7 @@ interface Props {
   challengeType: ChallengeType;
   npcName: string;
   npcEmoji: string;
-  onResult: (success: boolean, feedback: string) => void;
+  onResult: (success: boolean, _feedback: string) => void;
 }
 
 /* ══════════════════════════════════════════════
@@ -16,8 +16,7 @@ interface Props {
 export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Props) {
   const [phase, setPhase] = useState<'intro' | 'playing' | 'result'>('intro');
   const [score, setScore] = useState(0);
-  const [round, setRound] = useState(0);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [round, _setRound] = useState(0);
   const [combo, setCombo] = useState(0);
   const totalRounds = challengeType === 'logic' ? 5 : challengeType === 'strategy' ? 1 : 4;
 
@@ -30,20 +29,17 @@ export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Pr
     const bonus = combo > 2 ? combo * 5 : 0;
     setScore(s => s + 100 + bonus);
     setCombo(c => c + 1);
-    setFeedback(msg);
     if (round + 1 >= totalRounds) {
       setTimeout(() => {
         setPhase('result');
         onResult(true, msg);
       }, 1200);
     } else {
-      setTimeout(() => { setRound(r => r + 1); setFeedback(null); }, 1200);
     }
   }, [round, combo, totalRounds, onResult]);
 
   const handleLose = useCallback((msg: string) => {
     setCombo(0);
-    setFeedback(msg);
     if (round + 1 >= totalRounds) {
       setTimeout(() => {
         setPhase('result');
@@ -51,7 +47,6 @@ export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Pr
         onResult(finalScore > 100, msg);
       }, 1200);
     } else {
-      setTimeout(() => { setRound(r => r + 1); setFeedback(null); }, 1200);
     }
   }, [round, score, totalRounds, onResult]);
 
@@ -93,10 +88,10 @@ export function ChallengeGame({ challengeType, npcName, npcEmoji, onResult }: Pr
 
         {phase === 'playing' && (
           <motion.div key={round} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
-            {challengeType === 'logic' && <LogicGame round={round} onWin={handleWin} onLose={handleLose} feedback={feedback} />}
-            {challengeType === 'social' && <SocialGame round={round} onWin={handleWin} onLose={handleLose} feedback={feedback} />}
-            {challengeType === 'creative' && <CreativeGame round={round} onWin={handleWin} onLose={handleLose} feedback={feedback} />}
-            {challengeType === 'strategy' && <StrategyGame onWin={handleWin} onLose={handleLose} feedback={feedback} />}
+            {challengeType === 'logic' && <LogicGame round={round} onWin={handleWin} onLose={handleLose}  />}
+            {challengeType === 'social' && <SocialGame round={round} onWin={handleWin} onLose={handleLose}  />}
+            {challengeType === 'creative' && <CreativeGame round={round} onWin={handleWin} onLose={handleLose}  />}
+            {challengeType === 'strategy' && <StrategyGame onWin={handleWin} onLose={handleLose}  />}
           </motion.div>
         )}
 
@@ -131,7 +126,7 @@ const RUNE_SEQUENCES = [
   { pattern: ['⬆️', '➡️', '⬇️', '⬅️', '?'], answer: '⬆️', hint: 'Движение по кругу' },
 ];
 
-function LogicGame({ round, onWin, onLose, feedback }: { round: number; onWin: (m: string) => void; onLose: (m: string) => void; feedback: string | null }) {
+function LogicGame({ round, onWin, onLose }: { round: number; onWin: (m: string) => void; onLose: (m: string) => void }) {
   const seq = RUNE_SEQUENCES[round % RUNE_SEQUENCES.length];
   const options = ['🔮', '💎', '⭐', '🔥', '💧', '🦊', '🐰', '⬆️'].filter(o => o !== seq.answer).slice(0, 2);
   const allOptions = [seq.answer, ...options].sort(() => Math.random() - 0.5);
@@ -171,7 +166,7 @@ function LogicGame({ round, onWin, onLose, feedback }: { round: number; onWin: (
           ))}
         </div>
       )}
-      {showFeedback && feedback && (
+      {showFeedback && (
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
           className={`text-center p-4 rounded-2xl ${selected === seq.answer ? 'bg-[#00D2C4]/10' : 'bg-red-50'}`}>
           <span className="text-2xl">{selected === seq.answer ? '✨' : '💫'}</span>
@@ -208,7 +203,7 @@ const DIALOGUES = [
   ]},
 ];
 
-function SocialGame({ round, onWin, onLose, feedback }: { round: number; onWin: (m: string) => void; onLose: (m: string) => void; feedback: string | null }) {
+function SocialGame({ round, onWin, onLose }: { round: number; onWin: (m: string) => void; onLose: (m: string) => void;  }) {
   const d = DIALOGUES[round % DIALOGUES.length];
   const [responded, setResponded] = useState(false);
   const [result, setResult] = useState<'win' | 'lose' | null>(null);
@@ -275,7 +270,7 @@ const BUILD_CHALLENGES = [
   { task: 'Собери аптечку', items: ['🩹 бинт', '💊 лекарство', '🍬 конфета', '🎀 бантик', '🪥 щётка'], correct: ['🩹 бинт', '💊 лекарство'], slots: 2 },
 ];
 
-function CreativeGame({ round, onWin, onLose, feedback }: { round: number; onWin: (m: string) => void; onLose: (m: string) => void; feedback: string | null }) {
+function CreativeGame({ round, onWin, onLose }: { round: number; onWin: (m: string) => void; onLose: (m: string) => void;  }) {
   const challenge = BUILD_CHALLENGES[round % BUILD_CHALLENGES.length];
   const [selected, setSelected] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
@@ -347,7 +342,7 @@ function CreativeGame({ round, onWin, onLose, feedback }: { round: number; onWin
 /* ══════════════════════════════════════════════
    STRATEGY GAME — Resource Allocation
    ══════════════════════════════════════════════ */
-function StrategyGame({ onWin, onLose, feedback }: { onWin: (m: string) => void; onLose: (m: string) => void; feedback: string | null }) {
+function StrategyGame({ onWin, onLose }: { onWin: (m: string) => void; onLose: (m: string) => void;  }) {
   const [energy, setEnergy] = useState(50);
   const [path, setPath] = useState<'safe' | 'risk' | 'treasure' | null>(null);
   const [result, setResult] = useState<string | null>(null);

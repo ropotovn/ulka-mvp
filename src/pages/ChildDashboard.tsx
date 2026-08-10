@@ -13,7 +13,7 @@ export function ChildDashboard() {
   const [chosen, setChosen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('campaign');
-  const [gameResult, setGameResult] = useState<{ score: number; avgRt: number } | null>(null);
+  const [_gameResult, setGameResult] = useState<{ score: number; avgRt: number } | null>(null);
   const [playerRole, setPlayerRole] = useState<RoleId | null>(null);
   const [showEntryGame, setShowEntryGame] = useState(true);
 
@@ -57,7 +57,7 @@ export function ChildDashboard() {
       {/* CAMPAIGN MODE */}
       {viewMode === 'campaign' && playerRole && (
         <CampaignBoard playerRole={playerRole}
-          onComplete={(score) => { setShowEntryGame(true); setPlayerRole(null); }}
+          onComplete={() => { setShowEntryGame(true); setPlayerRole(null); }}
         />
       )}
 
@@ -65,9 +65,9 @@ export function ChildDashboard() {
       {viewMode === 'game' && (
         <div className="max-w-lg mx-auto">
           <FocusGame
-            onComplete={(score, maxScore, metrics) => {
-              setGameResult({ score, avgRt: metrics.avgRt });
-              selectChoice({ id: 'A', text: '', metricTracked: 'focus_attention', feedback: `Фокус-реактор: ${score}/${maxScore}, RT ${metrics.avgRt}ms` });
+            onComplete={(_score, maxScore, metrics) => {
+              setGameResult({ score: _score, avgRt: metrics.avgRt });
+              selectChoice({ id: 'A', text: '', metricTracked: 'focus_attention', feedback: `Фокус-реактор: ${_score}/${maxScore}, RT ${metrics.avgRt}ms` });
             }}
             onBack={() => setViewMode('mission')}
           />

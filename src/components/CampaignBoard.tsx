@@ -18,24 +18,6 @@ const CHALLENGE_COLORS: Record<ChallengeType, string> = {
   logic: '#00D2C4', social: '#FF8A65', creative: '#F59E0B', strategy: '#10B981',
 };
 
-const CHALLENGE_KEYWORDS: Record<ChallengeType, { win: string[]; neutral: string[] }> = {
-  logic: {
-    win: ['закономерность', 'паттерн', 'последовательность', 'чередует', 'ряд', 'логик', 'шифр', 'руна'],
-    neutral: ['попробовать', 'подумать', 'посмотреть'],
-  },
-  social: {
-    win: ['понимаю', 'чувств', 'помочь', 'выслушать', 'спросить', 'эмоци', 'мир', 'друг'],
-    neutral: ['поговорить', 'объяснить', 'спросить'],
-  },
-  creative: {
-    win: ['построить', 'сделать', 'создать', 'придумать', 'использовать', 'из', 'новый', 'свой'],
-    neutral: ['попробовать', 'может быть', 'вариант'],
-  },
-  strategy: {
-    win: ['ресурс', 'энерги', 'посчитать', 'оптималь', 'выгод', 'путь', 'план', 'меньше', 'эффектив'],
-    neutral: ['выбрать', 'пойти', 'решить'],
-  },
-};
 
 export function CampaignBoard({ playerRole, onComplete }: Props) {
   const campaign = CAMPAIGNS[0];
@@ -131,7 +113,6 @@ export function CampaignBoard({ playerRole, onComplete }: Props) {
         {nodePositions.map((node, i) => {
           const done = completedNodes.includes(node.id);
           const isCurrent = i === currentNode && !done;
-          const bestRole = ROLES.find(r => r.id === node.bestRole)!;
           const isMySpecialty = node.bestRole === playerRole;
 
           return (
