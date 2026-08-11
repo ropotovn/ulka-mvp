@@ -5,7 +5,7 @@ import { Hub } from '../components/Hub';
 import { EntryGame } from '../components/EntryGame';
 import { CampaignBoard } from '../components/CampaignBoard';
 import { ChallengeGame } from '../components/ChallengeGame';
-import { FocusGame } from '../components/games/FocusGame';
+import { DetectiveGame } from '../components/games/DetectiveGame';
 import { Reflection } from '../components/Reflection';
 import { MascotAvatar, MASCOTS } from '../components/MascotSystem';
 import type { MascotId } from '../components/MascotSystem';
@@ -95,16 +95,14 @@ export function ChildDashboard() {
         ) : null
       )}
 
-      {/* MINI-GAME */}
+      {/* GAME MODE — Detective */}
       {viewMode === 'game' && (
-        <div className="max-w-lg mx-auto">
-          <FocusGame
-            onComplete={(score, maxScore, metrics) => {
-              selectChoice({ id: 'A', text: '', metricTracked: 'focus_attention', feedback: `Фокус-реактор: ${score}/${maxScore}, RT ${metrics.avgRt}ms` });
-            }}
-            onBack={() => setViewMode('hub')}
-          />
-        </div>
+        <DetectiveGame
+          onComplete={(_score, analytics) => {
+            selectChoice({ id: 'A', text: '', metricTracked: 'focus_attention',
+              feedback: `Детектив: ${analytics.evidenceFound} улик, ${analytics.interviewsDone} опросов, вердикт: ${analytics.correctAccusation ? 'верно' : 'мимо'}` });
+          }}
+        />
       )}
 
       {/* REFLECTION */}

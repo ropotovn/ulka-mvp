@@ -6,7 +6,7 @@ import { ParentDashboard } from './pages/ParentDashboard';
 import { Header } from './components/Header';
 
 export default function App() {
-  const { view } = useApp();
+  const { view, log } = useApp();
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1F2937] selection:bg-[#5D5FEF]/20">
@@ -24,7 +24,7 @@ export default function App() {
         )}
         {view === 'parent' && (
           <motion.div key="parent" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <ParentDashboard />
+            <ParentDashboard log={log} />
           </motion.div>
         )}
       </AnimatePresence>
